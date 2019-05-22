@@ -275,7 +275,7 @@ Resources:
               Fn::ImportValue:
                 !Join [ '-', [ !Ref Environment, GitBranch ] ]
         Type: LINUX_CONTAINER
-        Image: aws/codebuild/nodejs:6.3.1
+        Image: aws/codebuild/nodejs:10.14.1
       Source:
         Type: CODEPIPELINE
       TimeoutInMinutes: 15
@@ -1062,7 +1062,7 @@ Resources:
             !Join [ '-', [ !Ref Environment, CloudWatchAlarmEmailerTopic ] ]
       AlarmDescription: !Sub ${Environment} | Admin Upgrade Check
       MetricName: "Last Upgrade Check Seconds"
-      Namespace: CVPN/Shared
+      Namespace: OO/Shared
       Statistic: Maximum
       Period: '43200'
       EvaluationPeriods: '1'
@@ -1087,7 +1087,7 @@ Resources:
             !Join [ '-', [ !Ref Environment, CloudWatchAlarmEmailerTopic ] ]
       AlarmDescription: !Sub ${Environment} | Admin Restart Check
       MetricName: "# Packages Require Restart"
-      Namespace: CVPN/Shared
+      Namespace: OO/Shared
       Statistic: Minimum
       Period: '43200'
       EvaluationPeriods: '1'
@@ -1112,7 +1112,7 @@ Resources:
             !Join [ '-', [ !Ref Environment, CloudWatchAlarmEmailerTopic ] ]
       AlarmDescription: !Sub ${Environment} | Admin Security Packages Upgradable
       MetricName: "# Security Packages Upgradable"
-      Namespace: CVPN/Shared
+      Namespace: OO/Shared
       Statistic: Minimum
       Period: '43200'
       EvaluationPeriods: '2'
@@ -1137,7 +1137,7 @@ Resources:
             !Join [ '-', [ !Ref Environment, CloudWatchAlarmEmailerTopic ] ]
       AlarmDescription: !Sub ${Environment} | Admin Node Update Check
       MetricName: "NodeJS Outdated"
-      Namespace: CVPN/Shared
+      Namespace: OO/Shared
       Statistic: Minimum
       Period: '43200'
       EvaluationPeriods: '1'

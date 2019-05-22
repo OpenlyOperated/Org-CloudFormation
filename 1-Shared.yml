@@ -822,35 +822,41 @@ Resources:
                   PACKAGES_REQUIRE_RESTART=\$(cat /var/run/reboot-required.pkgs)
                   NUM_PACKAGES_REQUIRE_RESTART=\$(printf "\$PACKAGES_REQUIRE_RESTART" | wc -l)
                   printf "Reboot-required packages:\n \$PACKAGES_REQUIRE_RESTART \n"
+                                
+                  if test -e "/usr/local/bin/node";
+                  then
+                    CURRENT_NODE_VERSION=\$(/usr/local/bin/node --version | cut -d v -f2)
+                  else
+                    CURRENT_NODE_VERSION=\$(/usr/bin/node --version | cut -d v -f2)
+                  fi
                   
-                  CURRENT_NODE_VERSION=\$(node --version | cut -d v -f2)
                   echo "\$CURRENT_NODE_VERSION" > /tmp/CURRENT_NODE_VERSION
                   LATEST_LTS_NODE_VERSION=\$(n --lts)
                   echo "\$LATEST_LTS_NODE_VERSION" > /tmp/LATEST_LTS_NODE_VERSION
                   printf "Current Vs Latest LTS Node Version:\n \$CURRENT_NODE_VERSION vs \$LATEST_LTS_NODE_VERSION \n"
-                  
+
                   printf "Publishing to CloudWatch\n"
                                     
-                  aws cloudwatch put-metric-data --metric-name "Last Upgrade Check Seconds" --namespace CVPN/Shared --unit Seconds --value \$SECONDS_SINCE_LAST_UPGRADE_CHECK --dimensions Environment=${Environment},InstanceId=\$INSTANCE_ID
-                  aws cloudwatch put-metric-data --metric-name "# Security Packages Upgradable" --namespace CVPN/Shared --unit Count --value \$NUM_UPGRADABLE_SECURITY_PACKAGES --dimensions Environment=${Environment},InstanceId=\$INSTANCE_ID
-                	aws cloudwatch put-metric-data --metric-name "# Packages Require Restart" --namespace CVPN/Shared --unit Count --value \$NUM_PACKAGES_REQUIRE_RESTART --dimensions Environment=${Environment},InstanceId=\$INSTANCE_ID
+                  aws cloudwatch put-metric-data --metric-name "Last Upgrade Check Seconds" --namespace OO/Shared --unit Seconds --value \$SECONDS_SINCE_LAST_UPGRADE_CHECK --dimensions Environment=${Environment},InstanceId=\$INSTANCE_ID
+                  aws cloudwatch put-metric-data --metric-name "# Security Packages Upgradable" --namespace OO/Shared --unit Count --value \$NUM_UPGRADABLE_SECURITY_PACKAGES --dimensions Environment=${Environment},InstanceId=\$INSTANCE_ID
+                	aws cloudwatch put-metric-data --metric-name "# Packages Require Restart" --namespace OO/Shared --unit Count --value \$NUM_PACKAGES_REQUIRE_RESTART --dimensions Environment=${Environment},InstanceId=\$INSTANCE_ID
                   if [ "\$CURRENT_NODE_VERSION" != "\$LATEST_LTS_NODE_VERSION" ];
                   then
-                  	aws cloudwatch put-metric-data --metric-name "NodeJS Outdated" --namespace CVPN/Shared --unit Count --value 1 --dimensions Environment=${Environment},InstanceId=\$INSTANCE_ID
+                  	aws cloudwatch put-metric-data --metric-name "NodeJS Outdated" --namespace OO/Shared --unit Count --value 1 --dimensions Environment=${Environment},InstanceId=\$INSTANCE_ID
                   else
-                  	aws cloudwatch put-metric-data --metric-name "NodeJS Outdated" --namespace CVPN/Shared --unit Count --value 0 --dimensions Environment=${Environment},InstanceId=\$INSTANCE_ID
+                  	aws cloudwatch put-metric-data --metric-name "NodeJS Outdated" --namespace OO/Shared --unit Count --value 0 --dimensions Environment=${Environment},InstanceId=\$INSTANCE_ID
                   fi
                   
                   if [ \$AUTOSCALING_GROUP_NAME != 'null' ];
                   then 
-                    aws cloudwatch put-metric-data --metric-name "Last Upgrade Check Seconds" --namespace CVPN/Shared --unit Seconds --value \$SECONDS_SINCE_LAST_UPGRADE_CHECK --dimensions Environment=${Environment},AutoScalingGroupName=\$AUTOSCALING_GROUP_NAME
-                    aws cloudwatch put-metric-data --metric-name "# Security Packages Upgradable" --namespace CVPN/Shared --unit Count --value \$NUM_UPGRADABLE_SECURITY_PACKAGES --dimensions Environment=${Environment},AutoScalingGroupName=\$AUTOSCALING_GROUP_NAME
-                  	aws cloudwatch put-metric-data --metric-name "# Packages Require Restart" --namespace CVPN/Shared --unit Count --value \$NUM_PACKAGES_REQUIRE_RESTART --dimensions Environment=${Environment},AutoScalingGroupName=\$AUTOSCALING_GROUP_NAME
+                    aws cloudwatch put-metric-data --metric-name "Last Upgrade Check Seconds" --namespace OO/Shared --unit Seconds --value \$SECONDS_SINCE_LAST_UPGRADE_CHECK --dimensions Environment=${Environment},AutoScalingGroupName=\$AUTOSCALING_GROUP_NAME
+                    aws cloudwatch put-metric-data --metric-name "# Security Packages Upgradable" --namespace OO/Shared --unit Count --value \$NUM_UPGRADABLE_SECURITY_PACKAGES --dimensions Environment=${Environment},AutoScalingGroupName=\$AUTOSCALING_GROUP_NAME
+                  	aws cloudwatch put-metric-data --metric-name "# Packages Require Restart" --namespace OO/Shared --unit Count --value \$NUM_PACKAGES_REQUIRE_RESTART --dimensions Environment=${Environment},AutoScalingGroupName=\$AUTOSCALING_GROUP_NAME
                     if [ "\$CURRENT_NODE_VERSION" != "\$LATEST_LTS_NODE_VERSION" ];
                     then
-                    	aws cloudwatch put-metric-data --metric-name "NodeJS Outdated" --namespace CVPN/Shared --unit Count --value 1 --dimensions Environment=${Environment},AutoScalingGroupName=\$AUTOSCALING_GROUP_NAME
+                    	aws cloudwatch put-metric-data --metric-name "NodeJS Outdated" --namespace OO/Shared --unit Count --value 1 --dimensions Environment=${Environment},AutoScalingGroupName=\$AUTOSCALING_GROUP_NAME
                     else
-                    	aws cloudwatch put-metric-data --metric-name "NodeJS Outdated" --namespace CVPN/Shared --unit Count --value 0 --dimensions Environment=${Environment},AutoScalingGroupName=\$AUTOSCALING_GROUP_NAME
+                    	aws cloudwatch put-metric-data --metric-name "NodeJS Outdated" --namespace OO/Shared --unit Count --value 0 --dimensions Environment=${Environment},AutoScalingGroupName=\$AUTOSCALING_GROUP_NAME
                     fi
                   fi
                 EOT
