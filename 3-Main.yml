@@ -528,7 +528,7 @@ Resources:
         - DeviceName: /dev/sda1
           Ebs:
             DeleteOnTermination: true
-            VolumeSize: 8
+            VolumeSize: 20
             VolumeType: gp2
       EbsOptimized: true
       IamInstanceProfile: !Ref MainInstanceProfile
@@ -808,7 +808,7 @@ Resources:
                         --home /home/node \
                         node
             1_setup:
-              command: curl -sL https://deb.nodesource.com/setup_12.x | bash -
+              command: curl -sL https://deb.nodesource.com/setup_16.x | bash -
             2_install:
               command: apt-get install -yq nodejs
             3_update_npm:
