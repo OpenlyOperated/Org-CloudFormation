@@ -16,7 +16,7 @@ Parameters:
     
   DatabaseInstanceClass:
     Type: String
-    Default: db.t2.micro
+    Default: db.t3.micro
 
   DatabasePerformanceInsights:
     Type: String
@@ -525,7 +525,7 @@ Resources:
     Properties:
       Handler: index.handler
       Role: !GetAtt ParameterStoreFunctionRole.Arn
-      Runtime: nodejs12.x
+      Runtime: nodejs16.x
       Timeout: 60
       Tags:
         - Key: Name
@@ -719,7 +719,7 @@ Resources:
           };
       Handler: index.handler
       Role: !GetAtt ErrorEmailerFunctionRole.Arn
-      Runtime: nodejs12.x
+      Runtime: nodejs16.x
       Timeout: 10
 
   ErrorEmailerFunctionRole:
@@ -1516,7 +1516,7 @@ Resources:
       - DatabaseSecurityGroup
     Properties:
       AllocatedStorage: 20
-      AllowMajorVersionUpgrade: false
+      AllowMajorVersionUpgrade: true
       AutoMinorVersionUpgrade: true
       BackupRetentionPeriod: 30
       DBInstanceClass: !Ref DatabaseInstanceClass
@@ -1524,7 +1524,7 @@ Resources:
       DBSubnetGroupName: !Ref DatabaseSubnetGroup
       EnablePerformanceInsights: !Ref DatabasePerformanceInsights
       Engine: postgres
-      EngineVersion: 10.9
+      EngineVersion: 13.4
       LicenseModel: postgresql-license
       MasterUsername: master
       MasterUserPassword: !GetAtt DatabaseAdminPasswordParameter.Value
@@ -1653,9 +1653,9 @@ Resources:
       - TestDatabaseSecurityGroup
     Properties:
       AllocatedStorage: 20
-      AllowMajorVersionUpgrade: false
+      AllowMajorVersionUpgrade: true
       AutoMinorVersionUpgrade: true
-      DBInstanceClass: db.t2.micro
+      DBInstanceClass: db.t3.micro
       Port: 5432
       PubliclyAccessible: true
       StorageType: gp2
@@ -1666,7 +1666,7 @@ Resources:
       PreferredMaintenanceWindow: wed:08:43-wed:09:13
       DBName: master
       Engine: postgres
-      EngineVersion: 10.9
+      EngineVersion: 13.4
       LicenseModel: postgresql-license
       MultiAZ: true
       DBSubnetGroupName: !Ref TestDatabaseSubnetGroup

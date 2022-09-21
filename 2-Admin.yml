@@ -275,7 +275,7 @@ Resources:
               Fn::ImportValue:
                 !Join [ '-', [ !Ref Environment, GitBranch ] ]
         Type: LINUX_CONTAINER
-        Image: aws/codebuild/nodejs:10.14.1
+        Image: aws/codebuild/standard:6.0
       Source:
         Type: CODEPIPELINE
       TimeoutInMinutes: 15
